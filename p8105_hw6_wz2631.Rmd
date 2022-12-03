@@ -181,11 +181,11 @@ I convert numeric to factor where appropriate and check for missing data, confir
 My model is based on a data-driven model-building process. I begin this modeling with a full model containing all variables, and then use stepwise regression to compare AIC and confirm the important variables. 
 According to the calculation, the regression model that best explains the data is bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken.
 ```{r}
-full_model <- lm(bwt ~., data = birthweight_data)
-stepwise_model <- step(full_model, direction = "both", trace = FALSE)
+full_model = lm(bwt ~., data = birthweight_data)
+stepwise_model = step(full_model, direction = "both", trace = FALSE)
 summary(stepwise_model)
 
-fit_model <- lm(bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken, data = birthweight_data)
+fit_model = lm(bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken, data = birthweight_data)
 birthweight_data %>% 
   add_residuals(fit_model) %>%
   add_predictions(fit_model) %>% 
@@ -196,5 +196,21 @@ birthweight_data %>%
        y = "Residuals",
        title = "A regression model for children's birthweights") +
   theme(plot.title = element_text(size = 10),text = element_text(size = 8)) 
+```
+
+#### Compare this model to two others.
+```{r}
+model_1 = lm(bwt ~ blength + gaweeks, data = birthweight_data)
+model_2 = lm(bwt ~ (bhead + blength + babysex)^3, data = birthweight_data)
+
+cv_pre_error = 
+  crossv_mc(birthweight_data, 100) %>% 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble),
+    model_x  = map(.x = train, ~lm(bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken, data = .x)),
+    model_1  = map(.x = train, ~lm(bwt ~ blength + gaweeks, data = .x)),
+    model_2  = map(.x = train, ~lm(bwt ~ (bhead + blength + babysex)^3, data = .x))
+    ) 
 ```
 
