@@ -177,4 +177,24 @@ skimr::skim(birthweight_data)
 ```
 I convert numeric to factor where appropriate and check for missing data, confirming that there is no missing data in this dataset.
 
+#### Propose a regression model for birthweight.
+My model is based on a data-driven model-building process. I begin this modeling with a full model containing all variables, and then use stepwise regression to compare AIC and confirm the important variables. 
+According to the calculation, the regression model that best explains the data is bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken.
+```{r}
+full_model <- lm(bwt ~., data = birthweight_data)
+stepwise_model <- step(full_model, direction = "both", trace = FALSE)
+summary(stepwise_model)
+
+fit_model <- lm(bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken, data = birthweight_data)
+birthweight_data %>% 
+  add_residuals(fit_model) %>%
+  add_predictions(fit_model) %>% 
+  ggplot(aes(x = pred, y = resid)) +
+  geom_point(alpha  = .2) +
+  geom_smooth() +
+  labs(x = "Fitted Values",
+       y = "Residuals",
+       title = "A regression model for children's birthweights") +
+  theme(plot.title = element_text(size = 10),text = element_text(size = 8)) 
+```
 
