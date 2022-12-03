@@ -123,5 +123,5 @@ fit_bal_data =
   knitr::kable(digits = 2.5)
 fit_bal_data
 ```
-
+The estimate of the adjusted odds ratio for solving homicides comparing male victims to female victims is 0.426, and the confidence interval of which is (0.325,0.558). It can be concluded that keeping all other variables fixed, there are lower chances for homicides to be solved when victims are male compared with that when victims are female.
 
