@@ -143,8 +143,21 @@ fit_all_data =
     CI_upper_all = exp(estimate + 1.96 * std.error)
   ) %>% 
   filter(term == "victim_sexMale") %>% 
-  select(term, city_state, odds_ratio_all, CI_lower_all, CI_upper_all) %>% 
-  knitr::kable(digits = 2.5)
+  select(term, city_state, odds_ratio_all, CI_lower_all, CI_upper_all) 
 fit_all_data
 ```
 The dataframe with estimated odds ratios and confidence intervals for each city is shown above.
+
+#### Create a plot that shows the estimated ORs and CIs for each city. Organize cities according to estimated OR, and comment on the plot.
+```{r}
+fit_all_data %>%
+  ggplot(aes(x = fct_reorder(city_state, odds_ratio_all), y = odds_ratio_all)) +
+  geom_point(size = 1) +
+  geom_errorbar(aes(ymin = CI_lower_all, ymax = CI_upper_all)) +
+  labs(x = "City, State",
+       y = "Estimated odds ratios",
+       title = "The estimated ORs and CIs for solving homicides comparing male victims to female victims in 50 cities") +
+  theme(plot.title = element_text(size = 8),text = element_text(size = 6), axis.text.x = element_text(angle = 90)) 
+```
+
+
