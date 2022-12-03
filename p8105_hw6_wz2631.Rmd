@@ -147,4 +147,4 @@ fit_all_data =
   knitr::kable(digits = 2.5)
 fit_all_data
 ```
-
+The dataframe with estimated odds ratios and confidence intervals for each city is shown above.
