@@ -199,7 +199,7 @@ birthweight_data %>%
 ```
 
 #### Compare this model to two others.
-```{r}
+```{r warning=FALSE}
 model_1 = lm(bwt ~ blength + gaweeks, data = birthweight_data)
 model_2 = lm(bwt ~ (bhead + blength + babysex)^3, data = birthweight_data)
 
@@ -211,6 +211,11 @@ cv_pre_error =
     model_x  = map(.x = train, ~lm(bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken, data = .x)),
     model_1  = map(.x = train, ~lm(bwt ~ blength + gaweeks, data = .x)),
     model_2  = map(.x = train, ~lm(bwt ~ (bhead + blength + babysex)^3, data = .x))
-    ) 
+    ) %>% 
+  mutate(
+    rmse_model_x = map2_dbl(.x = model_x, .y = test, ~rmse(model = .x, data = .y)),
+    rmse_model_1 = map2_dbl(.x = model_1, .y = test, ~rmse(model = .x, data = .y)),
+    rmse_model_2 = map2_dbl(.x = model_2, .y = test, ~rmse(model = .x, data = .y))
+    )
 ```
 
