@@ -238,3 +238,4 @@ cv_pre_error %>%
   theme(plot.title = element_text(size = 14),text = element_text(size = 8)) 
 ```
 
+According to the violin plot, my model of "bwt ~ babysex + bhead + blength + delwt + fincome + gaweeks + mheight + mrace + parity + ppwt + smoken" has the lowest RMSE campared with the other 2 models, which means this regression model best fits the data. And the model using length at birth and gestational age as predictors has the biggest RMSE, which means it cannot explain the data very well campared with the other 2 models.
