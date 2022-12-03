@@ -160,4 +160,17 @@ fit_all_data %>%
   theme(plot.title = element_text(size = 8),text = element_text(size = 6), axis.text.x = element_text(angle = 90)) 
 ```
 
+### Problem 3
+#### Load and clean the data for regression analysis.
+```{r}
+birthweight_data = 
+  read_csv("./rawdata/birthweight.csv") %>% 
+  janitor::clean_names() %>% 
+   mutate(
+     babysex = as.factor(babysex),
+     frace = as.factor(frace),
+     malform = as.factor(malform),
+     mrace = as.factor(mrace))
+skimr::skim(birthweight_data)
+```
 
