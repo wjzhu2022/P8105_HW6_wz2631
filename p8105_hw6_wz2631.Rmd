@@ -219,7 +219,7 @@ cv_pre_error =
     )
 ```
 
-
+#### Visualize the comparison in terms of the cross-validated prediction error.
 ```{r}
 cv_pre_error %>% 
   select(starts_with("rmse")) %>% 
