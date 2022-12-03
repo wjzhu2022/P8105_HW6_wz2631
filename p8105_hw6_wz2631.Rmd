@@ -125,3 +125,26 @@ fit_bal_data
 ```
 The estimate of the adjusted odds ratio for solving homicides comparing male victims to female victims is 0.426, and the confidence interval of which is (0.325,0.558). It can be concluded that keeping all other variables fixed, there are lower chances for homicides to be solved when victims are male compared with that when victims are female.
 
+#### Fit a logistic regression for each city in the dataset.
+Run glm for each of the cities in the dataset, and extract the adjusted odds ratio (and CI) for solving homicides comparing male victims to female victims. Do this within a “tidy” pipeline, making use of purrr::map, list columns, and unnest as necessary to create a dataframe with estimated ORs and CIs for each city.
+```{r}
+fit_all_data =
+  homicide_data %>% 
+  select(city_state, homicide_statu, victim_race:victim_sex) %>% 
+  nest(data = homicide_statu:victim_sex) %>% 
+  mutate(
+    fit = map(data, ~glm(homicide_statu ~ victim_age + victim_sex + victim_race, data =.x, family = binomial())),
+   results = map(fit, broom::tidy)
+   ) %>%
+  unnest(results) %>%
+  mutate(
+    odds_ratio_all = exp(estimate),
+    CI_lower_all = exp(estimate - 1.96 * std.error),
+    CI_upper_all = exp(estimate + 1.96 * std.error)
+  ) %>% 
+  filter(term == "victim_sexMale") %>% 
+  select(term, city_state, odds_ratio_all, CI_lower_all, CI_upper_all) %>% 
+  knitr::kable(digits = 2.5)
+fit_all_data
+```
+
